@@ -1,9 +1,9 @@
-name: 🟩 Auto Daily Commit
+name: log
 
 on:
   schedule:
-    - cron: '0 7 * * *'  # Tous les jours à 7h00 UTC
-  workflow_dispatch:       # Permet aussi de lancer manuellement
+    - cron: '0 7 * * *'
+  workflow_dispatch:      
 
 jobs:
   auto-commit:
@@ -23,10 +23,10 @@ jobs:
       - name: Update activity log
         run: |
           mkdir -p logs
-          echo "[$(date '+%Y-%m-%d %H:%M:%S')] ✅ Daily auto-commit - tower-ansible-demo" >> logs/activity.log
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')]  tower-ansible-demo" >> logs/activity.log
 
       - name: Commit and push
         run: |
           git add logs/activity.log
-          git commit -m "🟩 Auto commit - $(date '+%Y-%m-%d')"
+          git commit -m "activitylog - $(date '+%Y-%m-%d')"
           git push
