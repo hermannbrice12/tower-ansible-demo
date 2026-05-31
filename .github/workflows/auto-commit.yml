@@ -1,9 +1,12 @@
-name: log
+name: 🟩 Auto Daily Commit
 
 on:
   schedule:
-    - cron: '0 7 * * *'
-  workflow_dispatch:      
+    - cron: '0 7 * * *'  # Tous les jours à 7h00 UTC
+  workflow_dispatch:       # Permet aussi de lancer manuellement
+  push:                    # Se relance à chaque push pour rester actif
+    branches:
+      - master
 
 jobs:
   auto-commit:
@@ -23,10 +26,23 @@ jobs:
       - name: Update activity log
         run: |
           mkdir -p logs
-          echo "[$(date '+%Y-%m-%d %H:%M:%S')]  tower-ansible-demo" >> logs/activity.log
+          echo "[$(date '+%Y-%m-%d %H:%M:%S')] ✅ Daily auto-commit - tower-ansible-demo" >> logs/activity.log
 
       - name: Commit and push
         run: |
           git add logs/activity.log
-          git commit -m "activitylog - $(date '+%Y-%m-%d')"
-          git push
+          git diff --staged --quiet && echo "Nothing to commit" || (git commit -m "🟩 Auto commit - $(date '+%Y-%m-%d')" && git push)
+
+  keep-alive:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Keep workflow alive
+        uses: gautamkrishnar/keepalive-workflow@master
+        with:
+          gh_token: ${{ secrets.GITHUB_TOKEN }}
