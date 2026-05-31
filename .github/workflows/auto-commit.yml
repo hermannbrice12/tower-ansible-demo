@@ -31,7 +31,7 @@ jobs:
       - name: Commit and push
         run: |
           git add logs/activity.log
-          git diff --staged --quiet && echo "Nothing to commit" || (git commit -m "daily-activity-log - $(date '+%Y-%m-%d')" && git push)
+          git diff --staged --quiet && echo "Nothing to commit" || (git commit -m "Update daily-activity-log"
 
   keep-alive:
     runs-on: ubuntu-latest
